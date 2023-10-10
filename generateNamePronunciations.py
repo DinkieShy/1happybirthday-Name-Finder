@@ -24,7 +24,7 @@ def getNames():
 	# Some names have "NEW" or "2" at the end
 	# These all need to be filtered (NEW/2 are kept for finding the URL again later)
 	for name in unfilteredNames:
-		names.append([name, re.sub(r'[0-9]', "", name.replace("NEW", ""))])
+		names.append([name.lower(), re.sub(r'[0-9]', "", name.replace("NEW", "")).lower()])
 
 	print(f"Grabbed {len(names)} names")
 
