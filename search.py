@@ -81,7 +81,7 @@ def main():
 			else: pronunciation.append(nextPhone)
 
 	bestMatches = getBestMatch(name, pronunciation)
-	print("Here's the 10 best matches I found! (in order)")
+	print(f"Here's the {len(bestMatches)} best matches I found! (in order)")
 	for i in bestMatches:
 		print(f"https://www.1happybirthday.com/play_song.php?name={i[0]}")
 
