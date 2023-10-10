@@ -4,6 +4,7 @@ from cmudict import phones as cmuDictPhones
 import re
 from json import load
 from tqdm import tqdm
+from sys import float_info
 
 def isValidPhone(phone):
 	validPhones = cmuDictPhones()
@@ -13,15 +14,19 @@ def isValidPhone(phone):
 			return True
 	return False
 
-def comparePronunciations(actual, target):
-	total = len(actual) if len(actual) >= len(target) else len(target)
+def comparePronunciations(guess, target):
+	total = len(guess) if len(guess) >= len(target) else len(target)
 	score = 0
-	score -= abs(len(actual) - len(target))
-	for (a, b) in zip(target, actual):
-		if a == b:
+	index = 0
+	score -= abs(len(guess) - len(target))
+	for syllable in guess:
+		if syllable in target[index:]:
 			score += 1
-		else:
-			score -= 1
+			index = target.index(syllable)
+	if guess[-1] == target[-1]:
+		score += 2
+	if guess[0] != target[0]:
+		score /= 2
 	return score
 
 def getBestMatch(name, pronunciation):
@@ -43,7 +48,7 @@ def getBestMatch(name, pronunciation):
 	for nameKey in tqdm(list(storedNames.keys())):
 		score = comparePronunciations(storedNames[nameKey]["pronunciation"], pronunciation)
 		bestMatches.append((nameKey, score))
-		if len(bestMatches) > 5:
+		if len(bestMatches) > 10:
 			bestMatches = sorted(bestMatches, key=lambda match: match[1], reverse=True)
 			bestMatches.pop()
 
@@ -76,7 +81,11 @@ def main():
 			else: pronunciation.append(nextPhone)
 
 	bestMatches = getBestMatch(name, pronunciation)
-	print(bestMatches)
+	print("Here's the 10 best matches I found! (in order)")
+	for i in bestMatches:
+		print(f"https://www.1happybirthday.com/play_song.php?name={i[0]}")
+
+	input("Press return to exit")
 
 if __name__ == "__main__":
 	main()
