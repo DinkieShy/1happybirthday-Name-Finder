@@ -34,16 +34,16 @@ def getBestMatch(name, pronunciation):
 		storedNames = load(file)
 
 	print("Searching...")
-	exactMatches = []
-	for key in tqdm(list(storedNames.keys())):
-		if storedNames[key]["filtered"] == name: exactMatches.append(key)
-		elif storedNames[key]["pronunciation"] == pronunciation: exactMatches.append(key)
+	# exactMatches = []
+	# for key in tqdm(list(storedNames.keys())):
+	# 	if storedNames[key]["filtered"] == name: exactMatches.append(key)
+	# 	elif storedNames[key]["pronunciation"] == pronunciation: exactMatches.append(key)
 
-	if len(exactMatches) >= 1:
-		print("Exact match found!")
-		return exactMatches
+	# if len(exactMatches) >= 1:
+	# 	print("Exact match found!")
+	# 	return exactMatches
 
-	print("Exact match not found, searching for close pronunciations...")
+	# print("Exact match not found, searching for close pronunciations...")
 	bestMatches = []
 	for nameKey in tqdm(list(storedNames.keys())):
 		score = comparePronunciations(storedNames[nameKey]["pronunciation"], pronunciation)
