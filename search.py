@@ -16,17 +16,25 @@ def isValidPhone(phone):
 
 def comparePronunciations(guess, target):
 	total = len(guess) if len(guess) >= len(target) else len(target)
+	targetNoStress = [re.sub(r'[0-9]', "", phone) for phone in target]
+	guessNoStress = [re.sub(r'[0-9]', "", phone) for phone in guess]
 	score = 0
-	index = 0
-	score -= abs(len(guess) - len(target))
-	for syllable in guess:
-		if syllable in target[index:]:
-			score += 1
-			index = target.index(syllable)
-	if guess[-1] == target[-1]:
-		score += 2
-	if guess[0] != target[0]:
-		score /= 2
+
+	rhymes = True if guessNoStress[-2:] == targetNoStress[-2:] else False
+	firstSyllableMatch = True if guessNoStress[0] == targetNoStress[0] else False
+	lengthMatch = True if len(guessNoStress) == len(targetNoStress) else False
+	
+	stressIndexGuess = [i for i in range(len(guess)) if re.sub(r'[A-Z]*', "", guess[i]) != "1"]
+	stressIndexTarget = [i for i in range(len(target)) if re.sub(r'[A-Z]*', "", target[i]) != "1"]
+	if len(stressIndexGuess) > 0 and len(stressIndexTarget) > 0:
+		stressMatch = True if guess[stressIndexGuess[0]] == target[stressIndexTarget[0]] else False
+	else: stressMatch = False
+
+	if rhymes: score += 2
+	if firstSyllableMatch: score += 2
+	if lengthMatch: score += 1
+	if stressMatch: score += 3
+
 	return score
 
 def getBestMatch(name, pronunciation):
